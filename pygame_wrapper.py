@@ -7,7 +7,7 @@ import pygame
 from pygame import Surface
 from pygame.time import Clock
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH, UP, DOWN, LEFT, RIGHT
-
+from game_objects import Apple, Snake, GameObject  # noqa: F401
 
 class PyGameWrapper():
     screen: Surface = ...
