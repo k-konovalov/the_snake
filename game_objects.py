@@ -7,11 +7,10 @@
 """
 
 import pygame
-from pygame import Rect, Surface
+from pygame import Surface
 from constants import (
     BOARD_BACKGROUND_COLOR,
     BORDER_COLOR,
-    GRID_HEIGHT,
     GRID_SIZE,
 )
 
@@ -140,7 +139,8 @@ class Snake(GameObject):
         """Применяет отложенное направление движения.
 
         Если next_direction не None, устанавливает direction = next_direction
-        и сбрасывает next_direction в None. Предотвращает разворот на 180 градусов.
+        и сбрасывает next_direction в None.
+        Предотвращает разворот на 180 градусов.
         """
         if self.next_direction:
             self.direction = self.next_direction

@@ -33,7 +33,7 @@ class PyGameWrapper:
         """
         # Настройка игрового окна:
         self.screen = pygame.display.set_mode(
-            (SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32
+            (SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32,
         )
         # Настройка времени:
         self.clock = pygame.time.Clock()
