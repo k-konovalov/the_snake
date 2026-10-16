@@ -12,6 +12,8 @@ from constants import (
     BOARD_BACKGROUND_COLOR,
     BORDER_COLOR,
     GRID_SIZE,
+    GRID_HEIGHT,
+    GRID_WIDTH,
 )
 
 
@@ -104,9 +106,9 @@ class Snake(GameObject):
             удалением. Используется для затирания следа.
     """
 
-    next_direction = ...
-    length = ...
-    last: pygame.Rect = ...
+    next_direction = None
+    length = 1
+    last = None
 
     def get_head_position(self):
         """Возвращает позицию головы змейки.
@@ -133,7 +135,9 @@ class Snake(GameObject):
         направление — вправо. Вызывается при столкновении змейки
         с самой собой.
         """
-        pass
+        start_point = (GRID_HEIGHT / 2, GRID_WIDTH / 2)
+        self.positions = [start_point]
+        self.length = 1
 
     def update_direction(self):
         """Применяет отложенное направление движения.
