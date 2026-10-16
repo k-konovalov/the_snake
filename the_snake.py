@@ -6,7 +6,7 @@
 реализован в функции main().
 """
 
-from constants import SPEED
+from constants import SPEED, SCREEN_HEIGHT, SCREEN_WIDTH
 from pygame_wrapper import PyGameWrapper
 from game_objects import Apple, Snake
 from perfomance import PyGamePerfomance
@@ -17,20 +17,13 @@ def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
     """Игровой тик"""
     # Тут опишите основную логику игры.
     pygame_wrapper.handle_keys(snake)
+
     snake.update_direction()
-    snake.move()
-
-    snake_eat_apple = True
-    if snake_eat_apple:
-        snake.eat_apple(apple.position)
-        apple.randomize_position()
-
-    snake_eat_snake = True
-    if snake_eat_snake:
-        snake.reset()
-        pygame_wrapper.clear()
-
+    snake.move(field_size=(SCREEN_WIDTH, SCREEN_HEIGHT))
+    snake.eat_snake(func_clear=pygame_wrapper.clear)
+    snake.eat_apple(apple.position, apple_func=apple.randomize_position)
     snake.draw(pygame_wrapper.screen)
+
     apple.draw(pygame_wrapper.screen)
 
 

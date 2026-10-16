@@ -9,12 +9,9 @@
 import pygame
 from pygame import Surface
 from constants import (
-    BOARD_BACKGROUND_COLOR,
-    BORDER_COLOR,
-    GRID_SIZE,
-    GRID_HEIGHT,
-    GRID_WIDTH,
-    RIGHT,
+    BOARD_BACKGROUND_COLOR, BORDER_COLOR,
+    GRID_SIZE, GRID_HEIGHT, GRID_WIDTH,
+    RIGHT, LEFT, UP, DOWN,
 )
 from random import randint
 
@@ -143,7 +140,7 @@ class Snake(GameObject):
         """
         return self.positions[0]
 
-    def move(self):
+    def move(self, field_size):
         """Обновляет позицию змейки на одну ячейку.
 
         Вычисляет новую позицию головы на основе текущего направления,
@@ -151,12 +148,43 @@ class Snake(GameObject):
         яблоко, удаляет последний сегмент (хвост). При достижении края
         экрана змейка появляется с противоположной стороны (wrap).
         """
-        self.positions.insert()
-        self.positions.pop()
+        head_x, head_y = self.get_head_position()
+        new_head = ...
+        if self.direction == RIGHT:
+            new_head = (head_x + 1, head_y)
+        elif self.direction == LEFT:
+            new_head = (head_x - 1, head_y)
+        elif self.direction == UP:
+            new_head = (head_x, head_y + 1)
+        elif self.direction == DOWN:
+            new_head = (head_x, head_y + 1)
 
-    def eat_apple(self, apple_position):
+        field_size_width, field_size_height = field_size
+        newhead_x, newhead_y = new_head
+        if newhead_x == 0:
+            new_head = (field_size_width - 1, newhead_y)
+        elif newhead_x == field_size_width:
+            new_head = (0, newhead_y)
+        if newhead_y == 0:
+            new_head = (newhead_x, field_size_height - 1)
+        elif newhead_y == field_size_height:
+            new_head = (newhead_x, 0)
+        self.positions.insert(new_head)
+
+    def eat_apple(self, apple_position, apple_func):
         """Поедание яблока."""
-        pass
+        if self.position == apple_position:
+            apple_func()
+        else:
+            self.positions.pop()
+
+    def eat_snake(self, func_clear):
+        """Поедание самой себя"""
+        for part in self.positions:
+            if self.position == part:
+                self.reset()
+                func_clear()
+                return
 
     def reset(self):
         """Сбрасывает змейку в начальное состояние.
