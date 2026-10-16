@@ -131,7 +131,7 @@ class Snake(GameObject):
         self.length = 1
         self.direction = RIGHT
         self.next_direction = None
-        self.positions = super().positions
+        self.positions = super().positions.copy()
         self.position = self._start_point
 
     def get_head_position(self):
@@ -171,7 +171,7 @@ class Snake(GameObject):
             new_head = (newhead_x, field_size_height - 1)
         elif newhead_y == field_size_height:
             new_head = (newhead_x, 0)
-        super().positions.insert(0, new_head)
+        self.positions.insert(0, new_head)
 
     def eat_apple(self, apple_position, apple_func):
         """Поедание яблока."""
@@ -182,7 +182,7 @@ class Snake(GameObject):
 
     def eat_snake(self, func_clear):
         """Поедание самой себя"""
-        for part in self.positions:
+        for part in self.positions[1:]:
             if self.position == part:
                 self.reset()
                 func_clear()
@@ -221,7 +221,7 @@ class Snake(GameObject):
         Args:
             screen: Surface — поверхность pygame для отрисовки.
         """
-        for position in super().positions[:-1]:
+        for position in self.positions[:-1]:
             rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
