@@ -13,9 +13,8 @@
 | Модуль | Содержимое |
 |--------|-----------|
 | `constants.py` | Все константы: размеры (`SCREEN_WIDTH`, `SCREEN_HEIGHT`), `GRID_SIZE`, `GRID_WIDTH`, `GRID_HEIGHT`, направления (`UP`, `DOWN`, `LEFT`, `RIGHT`), цвета (`BOARD_BACKGROUND_COLOR`, `BORDER_COLOR`, `APPLE_COLOR`, `SNAKE_COLOR`), `SPEED` |
-| `pygame_settings.py` | Только настройки окна/заголовка. **Инициализация pygame — в `main()`**, не глобально при импорте (требование GIGACODE.md) |
+| `pygame.py` | Настройки окна/заголовка. Методы/функции отрисовки объектов на игровой поверхности. **Инициализация pygame — в `main()`**, не глобально при импорте (требование GIGACODE.md) |
 | `game_objects.py` | Классы `GameObject`, `Apple`, `Snake` |
-| `game_draw.py` | Методы/функции отрисовки объектов на игровой поверхности |
 | `performance.py` | Performance-декоратор для трекинга времени выполнения тика |
 | `the_snake.py` | Основная логика и игровой цикл; импортирует и реэкспортирует всё нужное |
 
