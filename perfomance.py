@@ -6,14 +6,13 @@ Performance-декоратор для трекинга времени выпол
 Используется для мониторинга производительности игрового цикла.
 """
 import time
-from typing import Any, Callable
 
 
 class PyGamePerfomance:
     """Класс-контейнер для performance-декоратора."""
 
     @staticmethod
-    def measure(func: Callable) -> Callable:
+    def measure(func):
         """Декоратор для измерения времени выполнения функции.
 
         Обёртывает переданную функцию, замеряет время выполнения
@@ -26,7 +25,7 @@ class PyGamePerfomance:
             Обёрнутая функция, которая при вызове печатает время
             выполнения и возвращает результат исходной функции.
         """
-        def wrapper() -> Any:
+        def wrapper():
             start_time = time.perf_counter()
             result = func()
             end_time = time.perf_counter()
@@ -39,4 +38,4 @@ class PyGamePerfomance:
 
             return result
 
-        return wrapper(func)
+        return wrapper()

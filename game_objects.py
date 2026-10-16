@@ -29,18 +29,18 @@ class GameObject:
 
     _start_point = (GRID_HEIGHT // 2, GRID_WIDTH // 2)
     position: tuple[int, int] = _start_point
-    positions: list[tuple[int, int]] = []
+    positions: list[tuple[int, int]] = [_start_point]
     body_color = pygame.Color(0, 0, 0)
 
-    def __init__(self):
+    def __init__(self, position, body_color):
         """Инициализирует базовые атрибуты объекта.
 
         Args:
             position: Начальная позиция объекта (x, y) в пикселях.
             body_color: Цвет объекта в формате RGB, например (255, 0, 0).
         """
-        self.position = self._start_point
-        self.body_color = pygame.Color(0, 0, 0)
+        self.position = position
+        self.body_color = body_color
 
     def draw(self, screen: Surface):
         """Абстрактный метод отрисовки объекта на экране.
@@ -91,7 +91,7 @@ class Apple(GameObject):
         Args:
             screen: Surface — поверхность pygame для отрисовки.
         """
-        rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
+        rect = pygame.Rect(super().position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
@@ -131,6 +131,8 @@ class Snake(GameObject):
         self.length = 1
         self.direction = RIGHT
         self.next_direction = None
+        self.positions = super().positions
+        self.position = self._start_point
 
     def get_head_position(self):
         """Возвращает позицию головы змейки.
@@ -169,7 +171,7 @@ class Snake(GameObject):
             new_head = (newhead_x, field_size_height - 1)
         elif newhead_y == field_size_height:
             new_head = (newhead_x, 0)
-        self.positions.insert(new_head)
+        super().positions.insert(0, new_head)
 
     def eat_apple(self, apple_position, apple_func):
         """Поедание яблока."""
@@ -219,13 +221,13 @@ class Snake(GameObject):
         Args:
             screen: Surface — поверхность pygame для отрисовки.
         """
-        for position in self.positions[:-1]:
+        for position in super().positions[:-1]:
             rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
         # Отрисовка головы змейки
-        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
+        head_rect = pygame.Rect(super().positions[0], (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, head_rect)
         pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
 
@@ -236,5 +238,5 @@ class Snake(GameObject):
 
 
 if __name__ == '__main__':
-    print('И зачем? Работает только в составе main())')
-    raise Exception('Dummy launch.')
+    Apple()
+    Snake()

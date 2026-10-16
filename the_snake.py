@@ -12,7 +12,7 @@ from game_objects import Apple, Snake
 from perfomance import PyGamePerfomance
 
 
-@PyGamePerfomance.measure
+# @PyGamePerfomance.measure
 def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
     """Игровой тик"""
     # Тут опишите основную логику игры.
