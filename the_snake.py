@@ -5,7 +5,6 @@
 для прохождения тестов через hasattr. Основной игровой цикл
 реализован в функции main().
 """
-from random import choice, randint  # noqa: F401
 
 from constants import SPEED
 from pygame_wrapper import PyGameWrapper
@@ -20,7 +19,12 @@ def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
     pygame_wrapper.handle_keys(snake)
     snake.update_direction()
     snake.move()
-    
+
+    snake_eat_apple = True
+    if snake_eat_apple:
+        snake.eat_apple(apple.position)
+        apple.randomize_position()
+
     snake_eat_snake = True
     if snake_eat_snake:
         snake.reset()

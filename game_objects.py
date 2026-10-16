@@ -14,11 +14,15 @@ from constants import (
     GRID_SIZE,
     GRID_HEIGHT,
     GRID_WIDTH,
+    RIGHT,
 )
+from random import randint
 
 
 class GameObject:
-    """Базовый класс для всех игровых объектов.
+    """
+
+    Базовый класс для всех игровых объектов.
 
     Атрибуты:
         position: Кортеж (x, y) — позиция объекта в пикселях
@@ -26,19 +30,20 @@ class GameObject:
         body_color: Кортеж RGB — цвет отрисовки объекта.
     """
 
-    position = ...
-    positions: list[int] = ...
-    body_color = ...
+    _start_point = (GRID_HEIGHT // 2, GRID_WIDTH // 2)
+    position: tuple[int, int] = _start_point
+    positions: list[tuple[int, int]] = []
+    body_color = pygame.Color(0, 0, 0)
 
-    def __init__(self, position, body_color):
+    def __init__(self):
         """Инициализирует базовые атрибуты объекта.
 
         Args:
             position: Начальная позиция объекта (x, y) в пикселях.
             body_color: Цвет объекта в формате RGB, например (255, 0, 0).
         """
-        self.position = position
-        self.body_color = body_color
+        self.position = self._start_point
+        self.body_color = pygame.Color(0, 0, 0)
 
     def draw(self, screen: Surface):
         """Абстрактный метод отрисовки объекта на экране.
@@ -63,13 +68,22 @@ class Apple(GameObject):
         position: Текущая позиция яблока (x, y) в пикселях.
     """
 
+    def __init__(self):
+        super().__init__(
+            body_color=pygame.Color(255, 0, 0),
+            position=self.randomize_position(),
+        )
+
     def randomize_position(self):
         """Устанавливает случайную позицию яблока в пределах игрового поля.
 
         Координаты выбираются так, чтобы яблоко оказалось внутри
         сетки игрового поля, выровненной по ячейкам.
         """
-        pass
+        self.position = (
+            randint(0, GRID_HEIGHT) * GRID_SIZE,
+            randint(0, GRID_WIDTH) * GRID_SIZE,
+        )
 
     def draw(self, screen: Surface):
         """Отрисовывает яблоко на игровой поверхности.
@@ -106,9 +120,20 @@ class Snake(GameObject):
             удалением. Используется для затирания следа.
     """
 
+    direction = RIGHT
     next_direction = None
     length = 1
     last = None
+
+    def __init__(self):
+        super().__init__(
+            body_color=pygame.Color(0, 255, 0),
+            position=self._start_point,
+        )
+        self.last = None
+        self.length = 1
+        self.direction = RIGHT
+        self.next_direction = None
 
     def get_head_position(self):
         """Возвращает позицию головы змейки.
@@ -116,7 +141,7 @@ class Snake(GameObject):
         Returns:
             Кортеж (x, y) координат головы — первый элемент списка positions.
         """
-        pass
+        return self.positions[0]
 
     def move(self):
         """Обновляет позицию змейки на одну ячейку.
@@ -126,6 +151,11 @@ class Snake(GameObject):
         яблоко, удаляет последний сегмент (хвост). При достижении края
         экрана змейка появляется с противоположной стороны (wrap).
         """
+        self.positions.insert()
+        self.positions.pop()
+
+    def eat_apple(self, apple_position):
+        """Поедание яблока."""
         pass
 
     def reset(self):
@@ -135,8 +165,9 @@ class Snake(GameObject):
         направление — вправо. Вызывается при столкновении змейки
         с самой собой.
         """
-        start_point = (GRID_HEIGHT / 2, GRID_WIDTH / 2)
-        self.positions = [start_point]
+        self.direction = RIGHT
+        self.positions = [self._start_point]
+        self.position = self._start_point
         self.length = 1
 
     def update_direction(self):
