@@ -18,6 +18,7 @@ def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
     # Тут опишите основную логику игры.
     pygame_wrapper.clock.tick(SPEED)
     pygame_wrapper.handle_keys(snake)
+    pygame_wrapper.clear()
 
     snake.update_direction()
     snake.move(field_size=(SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -26,6 +27,9 @@ def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
     snake.draw(pygame_wrapper.screen)
     apple.draw(pygame_wrapper.screen)
     pygame_wrapper.flip()
+    print('Snake position:', snake.position)
+    print('Snake array:', snake.positions)
+    print('Apple position', apple.position)
 
 
 def main():

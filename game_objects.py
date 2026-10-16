@@ -70,6 +70,7 @@ class Apple(GameObject):
             body_color=pygame.Color(255, 0, 0),
             position=self.randomize_position(),
         )
+        self.randomize_position()
 
     def randomize_position(self):
         """Устанавливает случайную позицию яблока в пределах игрового поля.
@@ -91,7 +92,7 @@ class Apple(GameObject):
         Args:
             screen: Surface — поверхность pygame для отрисовки.
         """
-        rect = pygame.Rect(super().position, (GRID_SIZE, GRID_SIZE))
+        rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
@@ -228,7 +229,7 @@ class Snake(GameObject):
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
         # Отрисовка головы змейки
-        head_rect = pygame.Rect(super().positions[0], (GRID_SIZE, GRID_SIZE))
+        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, head_rect)
         pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
 
