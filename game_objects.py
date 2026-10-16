@@ -154,23 +154,23 @@ class Snake(GameObject):
         head_x, head_y = self.get_head_position()
         new_head = ...
         if self.direction == RIGHT:
-            new_head = (head_x + 1, head_y)
+            new_head = (head_x + GRID_SIZE, head_y)
         elif self.direction == LEFT:
-            new_head = (head_x - 1, head_y)
+            new_head = (head_x - GRID_SIZE, head_y)
         elif self.direction == UP:
-            new_head = (head_x, head_y + 1)
+            new_head = (head_x, head_y - GRID_SIZE)
         elif self.direction == DOWN:
-            new_head = (head_x, head_y + 1)
+            new_head = (head_x, head_y + GRID_SIZE)
 
         field_size_width, field_size_height = field_size
         newhead_x, newhead_y = new_head
-        if newhead_x == 0:
+        if newhead_x + 20 <= 0:
             new_head = (field_size_width - 1, newhead_y)
-        elif newhead_x == field_size_width:
+        elif newhead_x + 20 >= field_size_width:
             new_head = (0, newhead_y)
-        if newhead_y == 0:
+        if newhead_y + 20 <= 0:
             new_head = (newhead_x, field_size_height - 1)
-        elif newhead_y == field_size_height:
+        elif newhead_y + 20 >= field_size_height:
             new_head = (newhead_x, 0)
         self.position = new_head
         self.positions.insert(0, new_head)
