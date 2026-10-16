@@ -70,6 +70,9 @@ class PyGameWrapper:
                     game_object.next_direction = LEFT
                 elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:  # noqa: E501
                     game_object.next_direction = RIGHT
+                    
+    def flip(self):
+        pygame.display.flip()
 
     def clear(self):
         """Очищение игрового поля"""

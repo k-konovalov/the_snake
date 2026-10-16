@@ -16,6 +16,7 @@ from perfomance import PyGamePerfomance
 def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
     """Игровой тик"""
     # Тут опишите основную логику игры.
+    pygame_wrapper.clock.tick(SPEED)
     pygame_wrapper.handle_keys(snake)
 
     snake.update_direction()
@@ -23,8 +24,8 @@ def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
     snake.eat_snake(func_clear=pygame_wrapper.clear)
     snake.eat_apple(apple.position, apple_func=apple.randomize_position)
     snake.draw(pygame_wrapper.screen)
-
     apple.draw(pygame_wrapper.screen)
+    pygame_wrapper.flip()
 
 
 def main():
@@ -42,7 +43,6 @@ def main():
     """
     # Инициализация PyGame:
     pygame_wrapper = PyGameWrapper()  # noqa: F841
-    pygame_wrapper.clock.tick(SPEED)
     pygame_wrapper.launch()
     # Тут нужно создать экземпляры классов.
     apple = Apple()  # noqa: F841

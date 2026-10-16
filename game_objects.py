@@ -171,6 +171,7 @@ class Snake(GameObject):
             new_head = (newhead_x, field_size_height - 1)
         elif newhead_y == field_size_height:
             new_head = (newhead_x, 0)
+        self.position = new_head
         self.positions.insert(0, new_head)
 
     def eat_apple(self, apple_position, apple_func):
