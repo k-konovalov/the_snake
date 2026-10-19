@@ -74,7 +74,7 @@ class Apple(GameObject):
             body_color=pygame.Color(255, 0, 0),
             position=self.randomize_position(),
         )
-        self.randomize_position()
+        self.position = self.randomize_position()
 
     def randomize_position(self):
         """Устанавливает случайную позицию яблока в пределах игрового поля.
@@ -82,7 +82,7 @@ class Apple(GameObject):
         Координаты выбираются так, чтобы яблоко оказалось внутри
         сетки игрового поля, выровненной по ячейкам.
         """
-        self.position = (
+        return (
             randint(0, GRID_WIDTH - 1) * GRID_SIZE,   # x
             randint(0, GRID_HEIGHT - 1) * GRID_SIZE,  # y
         )
@@ -118,25 +118,21 @@ class Snake(GameObject):
             применится после обновления. По умолчанию None.
         length: int — текущая длина змейки в сегментах.
             Изначально 1.
-        last: Кортеж (x, y) — позиция последнего сегмента перед
-            удалением. Используется для затирания следа.
     """
 
     direction = RIGHT
     next_direction = None
     length = 1
-    last = None
 
     def __init__(self):
         super().__init__(
             body_color=pygame.Color(0, 255, 0),
             position=self._start_point,
         )
-        self.last = None
         self.length = 1
         self.direction = RIGHT
         self.next_direction = None
-        self.positions = super().positions.copy()
+        self.positions = [self._start_point]
         self.position = self._start_point
 
     def get_head_position(self):
@@ -188,6 +184,7 @@ class Snake(GameObject):
         """Поедание яблока."""
         if self.position == apple_position:
             apple_func()
+            self.length = len(self.positions)
         else:
             self.positions.pop()
 
@@ -197,7 +194,7 @@ class Snake(GameObject):
             if self.position == part:
                 self.reset()
                 func_clear()
-                return
+                break
 
     def reset(self):
         """Сбрасывает змейку в начальное состояние.
@@ -232,21 +229,10 @@ class Snake(GameObject):
         Args:
             screen: Surface — поверхность pygame для отрисовки.
         """
-        for position in self.positions[:-1]:
+        for position in self.positions:  # [:-1]:
             rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
-
-        # Отрисовка головы змейки
-        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(screen, self.body_color, head_rect)
-        pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
-
-        # Затирание последнего сегмента
-        if self.last:
-            last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
-            pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
-
 
 if __name__ == '__main__':
     Apple()
