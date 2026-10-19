@@ -14,6 +14,7 @@ from constants import (
     RIGHT, LEFT, UP, DOWN,
 )
 from random import randint
+from custom_math import ceil_multiple_int
 
 
 class GameObject:
@@ -27,7 +28,10 @@ class GameObject:
         body_color: Кортеж RGB — цвет отрисовки объекта.
     """
 
-    _start_point = (GRID_HEIGHT // 2, GRID_WIDTH // 2)
+    _start_point = (
+        ceil_multiple_int(GRID_HEIGHT // 2, GRID_SIZE),
+        ceil_multiple_int(GRID_WIDTH // 2, GRID_SIZE),
+    )
     position: tuple[int, int] = _start_point
     positions: list[tuple[int, int]] = [_start_point]
     body_color = pygame.Color(0, 0, 0)
@@ -79,8 +83,8 @@ class Apple(GameObject):
         сетки игрового поля, выровненной по ячейкам.
         """
         self.position = (
-            randint(0, GRID_HEIGHT) * GRID_SIZE,
-            randint(0, GRID_WIDTH) * GRID_SIZE,
+            randint(0, GRID_WIDTH - 1) * GRID_SIZE,   # x
+            randint(0, GRID_HEIGHT - 1) * GRID_SIZE,  # y
         )
 
     def draw(self, screen: Surface):
@@ -164,14 +168,19 @@ class Snake(GameObject):
 
         field_size_width, field_size_height = field_size
         newhead_x, newhead_y = new_head
-        if newhead_x + 20 <= 0:
+        if newhead_x + GRID_SIZE <= 0:
             new_head = (field_size_width - 1, newhead_y)
-        elif newhead_x + 20 >= field_size_width:
+        elif newhead_x + GRID_SIZE >= field_size_width:
             new_head = (0, newhead_y)
-        if newhead_y + 20 <= 0:
+        if newhead_y + GRID_SIZE <= 0:
             new_head = (newhead_x, field_size_height - 1)
-        elif newhead_y + 20 >= field_size_height:
+        elif newhead_y + GRID_SIZE >= field_size_height:
             new_head = (newhead_x, 0)
+        x, y = new_head
+        new_head = (
+            ceil_multiple_int(x, GRID_SIZE),
+            ceil_multiple_int(y, GRID_SIZE),
+        )
         self.position = new_head
         self.positions.insert(0, new_head)
 
