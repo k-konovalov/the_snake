@@ -170,11 +170,11 @@ class Snake(GameObject):
         newhead_x, newhead_y = new_head
         if newhead_x + GRID_SIZE <= 0:
             new_head = (field_size_width - 1, newhead_y)
-        elif newhead_x + GRID_SIZE >= field_size_width:
+        elif newhead_x + GRID_SIZE > field_size_width:
             new_head = (0, newhead_y)
         if newhead_y + GRID_SIZE <= 0:
             new_head = (newhead_x, field_size_height - 1)
-        elif newhead_y + GRID_SIZE >= field_size_height:
+        elif newhead_y + GRID_SIZE > field_size_height:
             new_head = (newhead_x, 0)
         x, y = new_head
         new_head = (
