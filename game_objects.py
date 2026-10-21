@@ -12,9 +12,9 @@ from constants import (
     BORDER_COLOR,
     GRID_SIZE, GRID_HEIGHT, GRID_WIDTH,
     RIGHT, LEFT, UP, DOWN,
+    SCREEN_HEIGHT, SCREEN_WIDTH,
 )
 from random import randint
-from custom_math import ceil_multiple_int
 
 
 class GameObject:
@@ -29,14 +29,14 @@ class GameObject:
     """
 
     _start_point = (
-        ceil_multiple_int(GRID_HEIGHT // 2, GRID_SIZE),
-        ceil_multiple_int(GRID_WIDTH // 2, GRID_SIZE),
+        SCREEN_WIDTH // 2,   # x
+        SCREEN_HEIGHT // 2,  # y
     )
     position: tuple[int, int] = _start_point
     positions: list[tuple[int, int]] = [_start_point]
     body_color = pygame.Color(0, 0, 0)
 
-    def __init__(self, position, body_color):
+    def __init__(self, body_color=body_color, position=_start_point):
         """Инициализирует базовые атрибуты объекта.
 
         Args:
@@ -72,7 +72,6 @@ class Apple(GameObject):
     def __init__(self):
         super().__init__(
             body_color=pygame.Color(255, 0, 0),
-            position=self.randomize_position(),
         )
         self.position = self.randomize_position()
 
@@ -86,7 +85,6 @@ class Apple(GameObject):
             randint(0, GRID_WIDTH - 1) * GRID_SIZE,   # x
             randint(0, GRID_HEIGHT - 1) * GRID_SIZE,  # y
         )
-        return self.position
 
     def draw(self, screen: Surface):
         """Отрисовывает яблоко на игровой поверхности.
@@ -166,18 +164,13 @@ class Snake(GameObject):
         field_size_width, field_size_height = field_size
         newhead_x, newhead_y = new_head
         if newhead_x + GRID_SIZE <= 0:
-            new_head = (field_size_width - 1, newhead_y)
+            new_head = (field_size_width - GRID_SIZE, newhead_y)
         elif newhead_x + GRID_SIZE > field_size_width:
             new_head = (0, newhead_y)
         if newhead_y + GRID_SIZE <= 0:
-            new_head = (newhead_x, field_size_height - 1)
+            new_head = (newhead_x, field_size_height - GRID_SIZE)
         elif newhead_y + GRID_SIZE > field_size_height:
             new_head = (newhead_x, 0)
-        x, y = new_head
-        new_head = (
-            ceil_multiple_int(x, GRID_SIZE),
-            ceil_multiple_int(y, GRID_SIZE),
-        )
         self.position = new_head
         self.positions.insert(0, new_head)
 

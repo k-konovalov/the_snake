@@ -25,9 +25,9 @@ class PyGamePerfomance:
             Обёрнутая функция, которая при вызове печатает время
             выполнения и возвращает результат исходной функции.
         """
-        def wrapper():
+        def wrapper(*args, **kwargs):
             start_time = time.perf_counter()
-            result = func()
+            result = func(*args, **kwargs)
             end_time = time.perf_counter()
 
             # Вычисляем разницу в миллисекундах
@@ -38,4 +38,4 @@ class PyGamePerfomance:
 
             return result
 
-        return wrapper()
+        return wrapper
