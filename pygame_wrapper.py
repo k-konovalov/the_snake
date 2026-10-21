@@ -9,8 +9,9 @@
 import pygame
 from pygame import Surface
 from pygame.time import Clock
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH, UP, DOWN, LEFT, RIGHT
-from game_objects import Apple, Snake, GameObject  # noqa: F401
+
+from constants import (BOARD_BACKGROUND_COLOR, DOWN, LEFT, RIGHT,
+                       SCREEN_HEIGHT, SCREEN_WIDTH, UP)
 
 
 class PyGameWrapper:
@@ -62,16 +63,24 @@ class PyGameWrapper:
                 pygame.quit()
                 raise SystemExit
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP and game_object.direction != DOWN:
+                key = event.key
+                if key == pygame.K_UP and game_object.direction != DOWN:
                     game_object.next_direction = UP
-                elif event.key == pygame.K_DOWN and game_object.direction != UP:  # noqa: E501
+                elif key == pygame.K_DOWN and game_object.direction != UP:
                     game_object.next_direction = DOWN
-                elif event.key == pygame.K_LEFT and game_object.direction != RIGHT:  # noqa: E501
+                elif key == pygame.K_LEFT and game_object.direction != RIGHT:
                     game_object.next_direction = LEFT
-                elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:  # noqa: E501
+                elif key == pygame.K_RIGHT and game_object.direction != LEFT:
                     game_object.next_direction = RIGHT
+
+    def flip(self):
+        """Запрос на отрисовку"""
+        pygame.display.flip()
+
+    def clear(self):
+        """Очищение игрового поля"""
+        self.screen.fill(BOARD_BACKGROUND_COLOR)
 
 
 if __name__ == '__main__':
-    print('И зачем? Работает только в составе main())')
     raise Exception('Dummy launch.')

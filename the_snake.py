@@ -5,11 +5,32 @@
 для прохождения тестов через hasattr. Основной игровой цикл
 реализован в функции main().
 """
-from random import choice, randint  # noqa: F401
 
-from constants import SPEED  # noqa: F401
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH, SPEED
+from game_objects import Apple, GameObject, Snake
+from performance import PyGamePerformance
 from pygame_wrapper import PyGameWrapper
-from game_objects import Apple, Snake  # noqa: F401
+
+__all__ = ['Apple', 'GameObject', 'PyGamePerformance', 'Snake']
+
+
+@PyGamePerformance.measure
+def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
+    """Игровой тик"""
+    # Тут опишите основную логику игры.
+    pygame_wrapper.clock.tick(SPEED)
+    pygame_wrapper.handle_keys(snake)
+    pygame_wrapper.clear()
+
+    snake.update_direction()
+    snake.move(field_size=(SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    snake.eat_apple(apple.position, apple_func=apple.randomize_position)
+    snake.eat_snake(func_clear=pygame_wrapper.clear)
+    apple.draw(pygame_wrapper.screen)
+    snake.draw(pygame_wrapper.screen)
+
+    pygame_wrapper.flip()
 
 
 def main():
@@ -26,15 +47,14 @@ def main():
         7. Отрисовывает объекты и обновляет экран.
     """
     # Инициализация PyGame:
-    pygame_wrapper = PyGameWrapper()  # noqa: F841
+    pygame_wrapper = PyGameWrapper()
+    pygame_wrapper.launch()
     # Тут нужно создать экземпляры классов.
-    apple = Apple()  # noqa: F841
-    snake = Snake()  # noqa: F841
+    apple = Apple()
+    snake = Snake()
 
     while True:
-        # Тут опишите основную логику игры. # noqa: E116
-        pygame_wrapper.clock.tick(SPEED)
-        pygame_wrapper.handle_keys(snake)
+        tick(pygame_wrapper, snake, apple)
 
 
 if __name__ == '__main__':

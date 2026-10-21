@@ -36,6 +36,9 @@ flake8 the_snake.py             # линт (исключает tests/, venv/, en
 
 ## Конвенции
 
-- Flake8: max line length 79, complexity ≤ 10
+- Flake8: max line length 79, complexity ≤ 10, single quotes, `disable-noqa = true` (CI не учитывает `# noqa`)
+- Плагины flake8 (зеркало CI): flake8-print (T2xx), flake8-isort (I0xx), flake8-pie (PIE), flake8-quotes (Q000), flake8-eradicate (E800) — см. requirements.txt
 - Flake8 игнорирует: W503, F811, D100/D107/D203/D205/D213/D400/D401, N806/N818
+- Exclude: tests/, venv/, env/, .venv/
+- flake8-pie 0.16 падает на Python ≥3.12 (`ast.Str`); в venv пропатчен shim в `.venv/lib/python3.14/site-packages/flake8_pie/__init__.py` — повторить после пересоздания venv
 - Тесты проверяют наличие всех элементов через `hasattr` — имена должны совпадать точно

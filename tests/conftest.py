@@ -21,7 +21,8 @@ TIMEOUT_ASSERT_MSG = (
     'глобальной зоне видимости. Как исправить: вызов функции `main` поместите '
     'внутрь конструкции `if __name__ == "__main__":`.\n'
     '2. В цикле `while True` внутри функции `main` отсутствует вызов метода '
-    '`tick` объекта `clock`. Не изменяйте прекод в этой части.'
+    '`tick` объекта `clock` (через экземпляр `PyGameWrapper`). Не изменяйте '
+    'прекод в этой части.'
 )
 
 
@@ -101,6 +102,13 @@ def apple(_the_snake):
     return _create_game_object('Apple', _the_snake)
 
 
+@pytest.fixture(scope='session')
+def wrapper(_the_snake):
+    """Экземпляр `PyGameWrapper`: screen, clock и handle_keys сейчас живут
+    на уровне экземпляра, а не как переменные модуля `the_snake`."""
+    return _the_snake.PyGameWrapper()
+
+
 class StopInfiniteLoop(Exception):
     pass
 
@@ -133,8 +141,13 @@ def modified_clock(_the_snake):
                 return super().__getattribute__(name)
             return self.clock.__getattribute__(name)
 
-    original_clock = _the_snake.clock
-    modified_clock_obj = _Clock(original_clock)
-    _the_snake.clock = modified_clock_obj
+    wrapper_cls = _the_snake.PyGameWrapper
+    original_init = wrapper_cls.__init__
+
+    def patched_init(self):
+        original_init(self)
+        self.clock = _Clock(self.clock)
+
+    wrapper_cls.__init__ = patched_init
     yield
-    _the_snake.clock = original_clock
+    wrapper_cls.__init__ = original_init
