@@ -1,14 +1,14 @@
 """
 Performance-декоратор для трекинга времени выполнения тика.
 
-Предоставляет класс PyGamePerfomance со статическим методом measure,
+Предоставляет класс PyGamePerformance со статическим методом measure,
 который обёртывает функцию и выводит время её выполнения в миллисекундах.
 Используется для мониторинга производительности игрового цикла.
 """
 import time
 
 
-class PyGamePerfomance:
+class PyGamePerformance:
     """Класс-контейнер для performance-декоратора."""
 
     @staticmethod

@@ -14,7 +14,7 @@ from constants import (
     RIGHT, LEFT, UP, DOWN,
     SCREEN_HEIGHT, SCREEN_WIDTH,
 )
-from random import randint
+from random import choice, randint
 
 
 class GameObject:
@@ -195,10 +195,10 @@ class Snake(GameObject):
         """Сбрасывает змейку в начальное состояние.
 
         Длина возвращается к 1, позиция — в центр экрана,
-        направление — вправо. Вызывается при столкновении змейки
-        с самой собой.
+        направление выбирается случайно из четырёх возможных.
+        Вызывается при столкновении змейки с самой собой.
         """
-        self.direction = RIGHT
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])
         self.positions = [self._start_point]
         self.position = self._start_point
         self.length = 1

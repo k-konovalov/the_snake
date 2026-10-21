@@ -9,10 +9,10 @@
 from constants import SPEED, SCREEN_HEIGHT, SCREEN_WIDTH
 from pygame_wrapper import PyGameWrapper
 from game_objects import Apple, Snake, GameObject  # noqa: F401
-from perfomance import PyGamePerfomance  # noqa: F401
+from performance import PyGamePerformance  # noqa: F401
 
 
-@PyGamePerfomance.measure
+@PyGamePerformance.measure
 def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
     """Игровой тик"""
     # Тут опишите основную логику игры.

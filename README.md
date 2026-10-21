@@ -46,8 +46,12 @@ source .venv/bin/activate
 
 ```
 the_snake/
-├── the_snake.py              # Основной файл игры: классы GameObject, Apple, Snake,
-│                             # функция main() и главный игровой цикл
+├── the_snake.py              # Точка входа: main(), игровой цикл tick(),
+│                             # реэкспорт обязательных элементов
+├── constants.py              # Константы: размеры поля, цвета, направления, скорость
+├── game_objects.py           # Классы GameObject, Apple, Snake
+├── pygame_wrapper.py         # PyGameWrapper: окно, клавиатура, clock
+├── performance.py            # PyGamePerformance.measure — замер времени тика
 ├── requirements.txt          # Список зависимостей проекта
 ├── setup.cfg                 # Конфигурация инструментов (линтеры, форматтеры)
 ├── pytest.ini                # Настройки запуска тестов pytest
@@ -55,7 +59,8 @@ the_snake/
 ├── docs/
 │   ├── main_task.md          # Текст задания
 │   ├── how_to_build_pygame.md# Инструкция по сборке pygame из исходников
-│   └── how_to_review.md      # Критерии ревью
+│   ├── how_to_review.md      # Критерии ревью
+│   └── AI/                   # Материалы и логи работы с ИИ
 └── tests/
     ├── conftest.py           # Общие фикстуры для тестов
     ├── test_code_structure.py# Тесты структуры кода
@@ -66,4 +71,7 @@ the_snake/
 
 - `GameObject` — базовый класс игровых объектов; содержит общие атрибуты (`position`, `body_color`) и заготовку метода `draw`.
 - `Apple` — класс яблока, наследуется от `GameObject`; появляется в случайной клетке поля.
-- `Snake` — класс змейки, наследуется от `GameObject`; управляет движением, отрисовкой и обработкой нажатий клавиш.
+- `Snake` — класс змейки, наследуется от `GameObject`; управляет движением, отрисовкой и сбросом.
+- `PyGameWrapper` — обёртка над pygame: игровое окно, обработка клавиш (`handle_keys`), таймер.
+
+Классы объектов описаны в `game_objects.py`, точка входа — в `the_snake.py`.
