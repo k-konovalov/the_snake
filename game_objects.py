@@ -9,7 +9,7 @@
 import pygame
 from pygame import Surface
 from constants import (
-    BOARD_BACKGROUND_COLOR, BORDER_COLOR,
+    BORDER_COLOR,
     GRID_SIZE, GRID_HEIGHT, GRID_WIDTH,
     RIGHT, LEFT, UP, DOWN,
 )
@@ -82,10 +82,11 @@ class Apple(GameObject):
         Координаты выбираются так, чтобы яблоко оказалось внутри
         сетки игрового поля, выровненной по ячейкам.
         """
-        return (
+        self.position = (
             randint(0, GRID_WIDTH - 1) * GRID_SIZE,   # x
             randint(0, GRID_HEIGHT - 1) * GRID_SIZE,  # y
         )
+        return self.position
 
     def draw(self, screen: Surface):
         """Отрисовывает яблоко на игровой поверхности.
@@ -233,6 +234,7 @@ class Snake(GameObject):
             rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
 
 if __name__ == '__main__':
     Apple()

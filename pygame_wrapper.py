@@ -9,8 +9,11 @@
 import pygame
 from pygame import Surface
 from pygame.time import Clock
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH, UP, DOWN, LEFT, RIGHT, BOARD_BACKGROUND_COLOR
-from game_objects import Apple, Snake, GameObject  # noqa: F401
+from constants import (
+    SCREEN_HEIGHT, SCREEN_WIDTH,
+    UP, DOWN, LEFT, RIGHT,
+    BOARD_BACKGROUND_COLOR,
+)
 
 
 class PyGameWrapper:
@@ -70,8 +73,9 @@ class PyGameWrapper:
                     game_object.next_direction = LEFT
                 elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:  # noqa: E501
                     game_object.next_direction = RIGHT
-                    
+
     def flip(self):
+        """Запрос на отрисовку"""
         pygame.display.flip()
 
     def clear(self):
