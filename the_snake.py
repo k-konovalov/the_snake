@@ -6,31 +6,41 @@
 реализован в функции main().
 """
 
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH, SPEED
+import pygame
+from pygame import Surface
+from pygame.time import Clock
+
+from constants import (BOARD_BACKGROUND_COLOR, DOWN, GRID_HEIGHT, GRID_SIZE,
+                       GRID_WIDTH, LEFT, RIGHT, SCREEN_HEIGHT, SCREEN_WIDTH,
+                       SPEED, UP)
 from game_objects import Apple, GameObject, Snake
-from performance import PyGamePerformance
 from pygame_wrapper import PyGameWrapper
 
-__all__ = ['Apple', 'GameObject', 'PyGamePerformance', 'Snake']
+__all__ = [
+    'Apple',
+    'BOARD_BACKGROUND_COLOR',
+    'DOWN',
+    'GameObject',
+    'GRID_HEIGHT',
+    'GRID_SIZE',
+    'GRID_WIDTH',
+    'LEFT',
+    'RIGHT',
+    'SCREEN_HEIGHT',
+    'SCREEN_WIDTH',
+    'Snake',
+    'SPEED',
+    'UP',
+]
+
+screen: Surface = pygame.display.set_mode(
+    (SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32,
+)
+clock: Clock = pygame.time.Clock()
 
 
-@PyGamePerformance.measure
-def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
-    """Игровой тик"""
-    # Тут опишите основную логику игры.
-    pygame_wrapper.clock.tick(SPEED)
-    pygame_wrapper.handle_keys(snake)
-    pygame_wrapper.clear()
-
-    snake.update_direction()
-    snake.move(field_size=(SCREEN_WIDTH, SCREEN_HEIGHT))
-
-    snake.eat_apple(apple.position, apple_func=apple.randomize_position)
-    snake.eat_snake(func_clear=pygame_wrapper.clear)
-    apple.draw(pygame_wrapper.screen)
-    snake.draw(pygame_wrapper.screen)
-
-    pygame_wrapper.flip()
+def handle_keys(game_object):
+    """Заглушка для тестов см. PyGameWrapper"""
 
 
 def main():
@@ -48,13 +58,27 @@ def main():
     """
     # Инициализация PyGame:
     pygame_wrapper = PyGameWrapper()
+    pygame_wrapper.clock = clock
     pygame_wrapper.launch()
     # Тут нужно создать экземпляры классов.
     apple = Apple()
     snake = Snake()
 
     while True:
-        tick(pygame_wrapper, snake, apple)
+        # Тут опишите основную логику игры.
+        pygame_wrapper.clock.tick(SPEED)
+        pygame_wrapper.handle_keys(snake)
+        pygame_wrapper.clear()
+
+        snake.update_direction()
+        snake.move(field_size=(SCREEN_WIDTH, SCREEN_HEIGHT))
+
+        snake.eat_apple(apple.position, apple_func=apple.randomize_position)
+        snake.eat_snake(func_clear=pygame_wrapper.clear)
+        apple.draw(pygame_wrapper.screen)
+        snake.draw(pygame_wrapper.screen)
+
+        pygame_wrapper.flip()
 
 
 if __name__ == '__main__':

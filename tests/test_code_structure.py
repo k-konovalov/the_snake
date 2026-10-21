@@ -1,6 +1,5 @@
 import pygame
 import pytest
-import constants
 
 
 EXPECTED_GAME_OBJECT_ATTRS = (
@@ -79,71 +78,52 @@ def test_snake_attributes(snake, attr_type, attr_name):
     )
 
 
-# Константы вынесены в отдельный модуль `constants`
-EXPECTED_CONSTANTS = (
-    'SCREEN_WIDTH',
-    'SCREEN_HEIGHT',
-    'GRID_SIZE',
-    'GRID_WIDTH',
-    'GRID_HEIGHT',
-    'BOARD_BACKGROUND_COLOR',
-    'UP',
-    'DOWN',
-    'LEFT',
-    'RIGHT',
+EXPECTED_MODULE_ELEMENTS = (
+    ('константа', 'SCREEN_WIDTH'),
+    ('константа', 'SCREEN_HEIGHT'),
+    ('константа', 'GRID_SIZE'),
+    ('константа', 'GRID_WIDTH'),
+    ('константа', 'GRID_HEIGHT'),
+    ('константа', 'BOARD_BACKGROUND_COLOR'),
+    ('константа', 'UP'),
+    ('константа', 'DOWN'),
+    ('константа', 'LEFT'),
+    ('константа', 'RIGHT'),
+    ('переменная', 'screen'),
+    ('переменная', 'clock'),
+    ('функция', 'main'),
+    ('функция', 'handle_keys'),
 )
 
 
 @pytest.mark.parametrize(
-    'constant_name',
-    EXPECTED_CONSTANTS,
-    ids=EXPECTED_CONSTANTS
+    'element_type, element_name',
+    EXPECTED_MODULE_ELEMENTS,
+    ids=[elem[1] for elem in EXPECTED_MODULE_ELEMENTS]
 )
-def test_constants_defined(constant_name):
-    assert hasattr(constants, constant_name), (
-        f'Убедитесь, что в модуле `constants` определена '
-        f'константа `{constant_name}`.'
+def test_elements_exist(element_type, element_name, _the_snake):
+    assert hasattr(_the_snake, element_name), (
+        f'Убедитесь, что в модуле `the_snake` определена {element_type} '
+        f'`{element_name}`.'
     )
-
-
-# `screen`, `clock` и `handle_keys` теперь являются атрибутами экземпляра
-# `PyGameWrapper`, а не переменными модуля `the_snake`
-EXPECTED_WRAPPER_ATTRS = (
-    ('атрибут', 'screen'),
-    ('атрибут', 'clock'),
-    ('метод', 'handle_keys'),
-)
 
 
 @pytest.mark.parametrize(
-    'attr_type, attr_name',
-    EXPECTED_WRAPPER_ATTRS,
-    ids=[elem[1] for elem in EXPECTED_WRAPPER_ATTRS]
+    'expected_type, var_name',
+    (
+        (pygame.Surface, 'screen'),
+        (pygame.time.Clock, 'clock'),
+    ),
 )
-def test_wrapper_attributes(wrapper, attr_type, attr_name):
-    assert hasattr(wrapper, attr_name), (
-        f'Убедитесь, что у экземпляра класса `PyGameWrapper` '
-        f'определен {attr_type} `{attr_name}`.'
+def test_vars_type(expected_type, var_name, _the_snake):
+    assert isinstance(getattr(_the_snake, var_name, None), expected_type), (
+        'Убедитесь, что в модуле `the_snake` есть переменная '
+        f'`{var_name}` типа `{expected_type.__name__}`.'
     )
-
-
-def test_wrapper_screen_type(wrapper):
-    assert isinstance(wrapper.screen, pygame.Surface), (
-        'Убедитесь, что атрибут `screen` экземпляра `PyGameWrapper` '
-        f'является `{pygame.Surface.__name__}`.'
-    )
-
-
-def test_wrapper_clock_type(wrapper):
-    assert isinstance(wrapper.clock, pygame.time.Clock), (
-        'Убедитесь, что атрибут `clock` экземпляра `PyGameWrapper` '
-        f'является `{pygame.time.Clock.__name__}`.'
-    )
-
 
 @pytest.mark.parametrize(
     'func_name',
-    ('main',),
+    ('handle_keys', 'main'),
 )
 def test_vars_are_functions(func_name, _the_snake):
     assert callable(getattr(_the_snake, func_name, None)), (
