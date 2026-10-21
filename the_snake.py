@@ -8,7 +8,7 @@
 
 from constants import SPEED, SCREEN_HEIGHT, SCREEN_WIDTH
 from pygame_wrapper import PyGameWrapper
-from game_objects import Apple, Snake
+from game_objects import Apple, Snake, GameObject  # noqa: F401
 from perfomance import PyGamePerfomance  # noqa: F401
 
 
@@ -29,9 +29,9 @@ def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
     snake.draw(pygame_wrapper.screen)
 
     pygame_wrapper.flip()
-    print('Snake position:', snake.position)
-    print('Snake array:', snake.positions)
-    print('Apple position', apple.position)
+    # print('Snake position:', snake.position)
+    # print('Snake array:', snake.positions)
+    # print('Apple position', apple.position)
 
 
 def main():

@@ -85,6 +85,7 @@ class Apple(GameObject):
             randint(0, GRID_WIDTH - 1) * GRID_SIZE,   # x
             randint(0, GRID_HEIGHT - 1) * GRID_SIZE,  # y
         )
+        return self.position
 
     def draw(self, screen: Surface):
         """Отрисовывает яблоко на игровой поверхности.
