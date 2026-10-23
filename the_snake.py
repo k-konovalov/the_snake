@@ -6,9 +6,6 @@
 реализован в функции main().
 """
 
-from pygame import Surface
-from pygame.time import Clock
-
 from constants import (BOARD_BACKGROUND_COLOR, DOWN, GRID_HEIGHT, GRID_SIZE,
                        GRID_WIDTH, LEFT, RIGHT, SCREEN_HEIGHT, SCREEN_WIDTH,
                        SPEED, UP)
@@ -32,10 +29,6 @@ __all__ = [
     'UP',
 ]
 
-pygame_wrapper = PyGameWrapper()
-screen: Surface = pygame_wrapper.screen
-clock: Clock = pygame_wrapper.clock
-
 
 def handle_keys(game_object):
     """Заглушка для тестов см. PyGameWrapper"""
@@ -46,7 +39,7 @@ def main():
 
     Инициализирует Pygame, создаёт экземпляры Snake и Apple,
     затем в бесконечном цикле:
-        1. Ограничивает частоту кадров через clock.tick(SPEED).
+        1. Ограничивает частоту кадров через pygame_wrapper.clock.tick(SPEED).
         2. Обрабатывает нажатия клавиш через handle_keys().
         3. Обновляет направление змейки через update_direction().
         4. Двигает змейку через move().
@@ -55,6 +48,7 @@ def main():
         7. Отрисовывает объекты и обновляет экран.
     """
     # Инициализация PyGame:
+    pygame_wrapper = PyGameWrapper()
     pygame_wrapper.launch()
     # Тут нужно создать экземпляры классов.
     snake = Snake()
@@ -62,7 +56,7 @@ def main():
 
     while True:
         # Тут опишите основную логику игры.
-        clock.tick(SPEED)
+        pygame_wrapper.clock.tick(SPEED)
         pygame_wrapper.handle_keys(snake)
         pygame_wrapper.clear()
 
