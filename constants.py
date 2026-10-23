@@ -8,6 +8,10 @@
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH = 640   # // 2  # Ширина игрового окна в пикселях
 SCREEN_HEIGHT = 480  # // 2  # Высота игрового окна в пикселях
+CENTER_POINT = (
+    SCREEN_WIDTH // 2,   # x
+    SCREEN_HEIGHT // 2,  # y
+)
 GRID_SIZE = 20  # Размер одной ячейки сетки в пикселях
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE  # Количество ячеек по горизонтали
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE  # Количество ячеек по вертикали
@@ -25,7 +29,7 @@ APPLE_COLOR = (255, 0, 0)  # Цвет яблока — красный
 SNAKE_COLOR = (0, 255, 0)  # Цвет змейки — зелёный
 
 # Скорость игры (итераций в секунду):
-SPEED = 5  # 20
+SPEED = 20
 
 if __name__ == '__main__':
     raise Exception('Dummy launch.')

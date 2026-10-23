@@ -6,31 +6,63 @@
 реализован в функции main().
 """
 
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH, SPEED
+import pygame as pg
+
+from constants import (BOARD_BACKGROUND_COLOR, DOWN, GRID_HEIGHT, GRID_SIZE,
+                       GRID_WIDTH, LEFT, RIGHT, SCREEN_HEIGHT, SCREEN_WIDTH,
+                       SPEED, UP)
 from game_objects import Apple, GameObject, Snake
-from performance import PyGamePerformance
-from pygame_wrapper import PyGameWrapper
 
-__all__ = ['Apple', 'GameObject', 'PyGamePerformance', 'Snake']
+__all__ = [
+    'Apple',
+    'BOARD_BACKGROUND_COLOR',
+    'DOWN',
+    'GameObject',
+    'GRID_HEIGHT',
+    'GRID_SIZE',
+    'GRID_WIDTH',
+    'LEFT',
+    'RIGHT',
+    'SCREEN_HEIGHT',
+    'SCREEN_WIDTH',
+    'Snake',
+    'SPEED',
+    'UP',
+]
+
+# Настройка игрового окна:
+screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+
+# Заголовок окна игрового поля:
+pg.display.set_caption('Змейка')
+
+# Настройка времени:
+clock = pg.time.Clock()
 
 
-@PyGamePerformance.measure
-def tick(pygame_wrapper: PyGameWrapper, snake: Snake, apple: Apple):
-    """Игровой тик"""
-    # Тут опишите основную логику игры.
-    pygame_wrapper.clock.tick(SPEED)
-    pygame_wrapper.handle_keys(snake)
-    pygame_wrapper.clear()
+def handle_keys(game_object):
+    """Обрабатывает события клавиатуры для смены направления змейки.
 
-    snake.update_direction()
-    snake.move(field_size=(SCREEN_WIDTH, SCREEN_HEIGHT))
+    Обработает события QUIT (закрытие окна) и KEYDOWN (нажатие
+    стрелок). Запрещает разворот змейки на 180 градусов.
 
-    snake.eat_apple(apple.position, apple_func=apple.randomize_position)
-    snake.eat_snake(func_clear=pygame_wrapper.clear)
-    apple.draw(pygame_wrapper.screen)
-    snake.draw(pygame_wrapper.screen)
-
-    pygame_wrapper.flip()
+    Args:
+        game_object: Объект Snake, направление которого нужно изменить.
+    """
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            pg.quit()
+            raise SystemExit
+        elif event.type == pg.KEYDOWN:
+            key = event.key
+            if key == pg.K_UP and game_object.direction != DOWN:
+                game_object.next_direction = UP
+            elif key == pg.K_DOWN and game_object.direction != UP:
+                game_object.next_direction = DOWN
+            elif key == pg.K_LEFT and game_object.direction != RIGHT:
+                game_object.next_direction = LEFT
+            elif key == pg.K_RIGHT and game_object.direction != LEFT:
+                game_object.next_direction = RIGHT
 
 
 def main():
@@ -38,7 +70,7 @@ def main():
 
     Инициализирует Pygame, создаёт экземпляры Snake и Apple,
     затем в бесконечном цикле:
-        1. Ограничивает частоту кадров через clock.tick(SPEED).
+        1. Ограничивает частоту кадров через pygame_wrapper.clock.tick(SPEED).
         2. Обрабатывает нажатия клавиш через handle_keys().
         3. Обновляет направление змейки через update_direction().
         4. Двигает змейку через move().
@@ -47,14 +79,31 @@ def main():
         7. Отрисовывает объекты и обновляет экран.
     """
     # Инициализация PyGame:
-    pygame_wrapper = PyGameWrapper()
-    pygame_wrapper.launch()
+    pg.init()
     # Тут нужно создать экземпляры классов.
-    apple = Apple()
     snake = Snake()
+    apple = Apple(restricted_positions=snake.positions)
 
     while True:
-        tick(pygame_wrapper, snake, apple)
+        # Тут опишите основную логику игры.
+        clock.tick(SPEED)
+        handle_keys(snake)
+        screen.fill(BOARD_BACKGROUND_COLOR)
+
+        snake.update_direction()
+        snake.move(field_size=(SCREEN_WIDTH, SCREEN_HEIGHT))
+
+        if snake.position == apple.position:
+            snake.length = len(snake.positions)
+            apple.randomize_position(restricted_positions=snake.positions)
+        else:
+            snake.positions.pop()
+
+        snake.eat_snake(func_clear=screen.fill(BOARD_BACKGROUND_COLOR))
+        apple.draw(screen)
+        snake.draw(screen)
+
+        pg.display.flip()
 
 
 if __name__ == '__main__':
