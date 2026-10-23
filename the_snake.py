@@ -66,6 +66,7 @@ def handle_keys(game_object):
 
 
 def main():
+    exit()
     """Основной игровой цикл.
 
     Инициализирует Pygame, создаёт экземпляры Snake и Apple,
@@ -82,7 +83,7 @@ def main():
     pg.init()
     # Тут нужно создать экземпляры классов.
     snake = Snake()
-    apple = Apple(restricted_positions=snake.positions)
+    apple = Apple()
 
     while True:
         # Тут опишите основную логику игры.
