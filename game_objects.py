@@ -6,16 +6,20 @@
 и метод отрисовки.
 """
 
+from abc import ABC, abstractmethod
 from random import choice, randint
 
 import pygame
 from pygame import Surface
 
-from constants import (BORDER_COLOR, DOWN, GRID_HEIGHT, GRID_SIZE, GRID_WIDTH,
-                       LEFT, RIGHT, SCREEN_HEIGHT, SCREEN_WIDTH, UP)
+from constants import (APPLE_COLOR, BORDER_COLOR, BOARD_BACKGROUND_COLOR,
+                       CENTER_POINT, DOWN, GRID_HEIGHT, GRID_SIZE,
+                       GRID_WIDTH, LEFT, RIGHT, SCREEN_HEIGHT, SCREEN_WIDTH,
+                       SNAKE_COLOR, UP,
+                       )
 
 
-class GameObject:
+class GameObject(ABC):
     """
 
     Базовый класс для всех игровых объектов.
@@ -26,24 +30,18 @@ class GameObject:
         body_color: Кортеж RGB — цвет отрисовки объекта.
     """
 
-    _start_point = (
-        SCREEN_WIDTH // 2,   # x
-        SCREEN_HEIGHT // 2,  # y
-    )
-    position: tuple[int, int] = _start_point
-    positions: list[tuple[int, int]] = [_start_point]
-    body_color = pygame.Color(0, 0, 0)
-
-    def __init__(self, body_color=body_color, position=_start_point):
+    def __init__(self, body_color=BOARD_BACKGROUND_COLOR, position=CENTER_POINT):
         """Инициализирует базовые атрибуты объекта.
 
         Args:
             position: Начальная позиция объекта (x, y) в пикселях.
             body_color: Цвет объекта в формате RGB, например (255, 0, 0).
         """
-        self.position = position
-        self.body_color = body_color
+        self.position: tuple[int, int] = position
+        self.positions: list[tuple[int, int]] = [position]
+        self.body_color = pygame.Color(body_color)
 
+    @abstractmethod
     def draw(self, screen: Surface):
         """Абстрактный метод отрисовки объекта на экране.
 
@@ -52,6 +50,15 @@ class GameObject:
         Args:
             screen: Surface — поверхность pygame, на которой рисуется объект.
         """
+        raise NotImplementedError(
+            f'Не переопределен метод draw класса {self.__class__.__name__}',
+        )
+
+    def draw_rect(self, screen: Surface):
+        """Отрисовывает квадрат на игровой поверхности."""
+        rect = (pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE)))
+        pygame.draw.rect(screen, self.body_color, rect)
+        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
 
 class Apple(GameObject):
@@ -66,22 +73,30 @@ class Apple(GameObject):
         position: Текущая позиция яблока (x, y) в пикселях.
     """
 
-    def __init__(self):
+    def __init__(self, body_color=APPLE_COLOR, position=None):
         super().__init__(
-            body_color=pygame.Color(255, 0, 0),
+            body_color=pygame.Color(body_color),
         )
         self.position = self.randomize_position()
 
-    def randomize_position(self):
+    def randomize_position(
+        self,
+        restricted_positions: list[tuple[int, int]] = None,
+    ):
         """Устанавливает случайную позицию яблока в пределах игрового поля.
 
         Координаты выбираются так, чтобы яблоко оказалось внутри
         сетки игрового поля, выровненной по ячейкам.
         """
-        self.position = (
-            randint(0, GRID_WIDTH - 1) * GRID_SIZE,   # x
-            randint(0, GRID_HEIGHT - 1) * GRID_SIZE,  # y
-        )
+        def get_pos():
+            return (
+                randint(0, GRID_WIDTH - 1) * GRID_SIZE,   # x
+                randint(0, GRID_HEIGHT - 1) * GRID_SIZE,  # y
+            )
+        new_pos = get_pos()
+        while new_pos in restricted_positions:
+            new_pos = get_pos()
+        self.position = new_pos
         return self.position
 
     def draw(self, screen: Surface):
@@ -93,9 +108,7 @@ class Apple(GameObject):
         Args:
             screen: Surface — поверхность pygame для отрисовки.
         """
-        rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(screen, self.body_color, rect)
-        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+        self.draw_rect(screen)
 
 
 class Snake(GameObject):
@@ -121,9 +134,9 @@ class Snake(GameObject):
     next_direction = None
     length = 1
 
-    def __init__(self):
+    def __init__(self, body_color, position):
         super().__init__(
-            body_color=pygame.Color(0, 255, 0),
+            body_color=pygame.Color(SNAKE_COLOR),
             position=self._start_point,
         )
         self.length = 1
@@ -222,9 +235,7 @@ class Snake(GameObject):
             screen: Surface — поверхность pygame для отрисовки.
         """
         for position in self.positions:  # [:-1]:
-            rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
-            pygame.draw.rect(screen, self.body_color, rect)
-            pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+            self.draw_rect(screen)
 
 
 if __name__ == '__main__':
