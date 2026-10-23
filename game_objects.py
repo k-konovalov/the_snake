@@ -8,7 +8,7 @@
 
 from random import choice, randint
 
-import pygame
+import pygame as pg
 from pygame import Surface
 
 from constants import (APPLE_COLOR, BOARD_BACKGROUND_COLOR, BORDER_COLOR,
@@ -37,7 +37,7 @@ class GameObject:
         """
         self.position: tuple[int, int] = position
         self.positions: list[tuple[int, int]] = [position]
-        self.body_color = pygame.Color(body_color)
+        self.body_color = pg.Color(body_color)
 
     def draw(self, screen: Surface):
         """Абстрактный метод отрисовки объекта на экране.
@@ -67,10 +67,11 @@ class GameObject:
             position: Необязательная позиция (x, y) квадрата. Если не
                 указана, рисует в текущей позиции объекта.
         """
-        target = self.position if position is None else position
-        rect = pygame.Rect(target, (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(screen, self.body_color, rect)
-        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+        if position is None:
+            position = self.position
+        rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
+        pg.draw.rect(screen, self.body_color, rect)
+        pg.draw.rect(screen, BORDER_COLOR, rect, 1)
 
 
 class Apple(GameObject):
@@ -85,21 +86,25 @@ class Apple(GameObject):
         position: Текущая позиция яблока (x, y) в пикселях.
     """
 
-    def __init__(self, body_color=APPLE_COLOR, position=None):
+    def __init__(self, body_color=APPLE_COLOR, position=None,
+                 restricted_positions=None):
         """Инициализирует яблоко.
 
         Args:
             body_color: Цвет яблока, по умолчанию APPLE_COLOR.
             position: Явная позиция (x, y). Если не указана — выбирается
                 случайная.
+            restricted_positions: Занятые ячейки, в которых яблоко не
+                должно появиться. По умолчанию None (ограничений нет).
         """
-        
-        super().__init__(
-            body_color=body_color, 
-            position=self.get_random_pos() if position is None else position,
-        )
-        
-    def get_random_pos(self) -> tuple[int,int]:
+        super().__init__(body_color=body_color, position=position)
+        if position is None:
+            self.randomize_position(
+                restricted_positions=restricted_positions,
+            )
+
+    def get_random_pos(self) -> tuple[int, int]:
+        """Возвращает случайную позицию (x, y), выровненную по сетке."""
         return (
             randint(0, GRID_WIDTH - 1) * GRID_SIZE,   # x
             randint(0, GRID_HEIGHT - 1) * GRID_SIZE,  # y
@@ -108,7 +113,7 @@ class Apple(GameObject):
     def randomize_position(
         self,
         restricted_positions: list[tuple[int, int]] | None = None,
-    ) -> None:
+    ) -> tuple[int, int]:
         """Устанавливает случайную позицию яблока в пределах игрового поля.
 
         Координаты выбираются так, чтобы яблоко оказалось внутри
@@ -118,11 +123,17 @@ class Apple(GameObject):
         Args:
             restricted_positions: Занятые ячейки, в которых яблоко не
                 должно появиться. По умолчанию None (ограничений нет).
+
+        Returns:
+            Новая позиция яблока (x, y).
         """
+        restricted_positions = restricted_positions or []
         new_pos = self.get_random_pos()
         while new_pos in restricted_positions:
             new_pos = self.get_random_pos()
         self.position = new_pos
+        self.positions = [new_pos]
+        return new_pos
 
     def draw(self, screen: Surface):
         """Отрисовывает яблоко на игровой поверхности.

@@ -6,7 +6,6 @@
 реализован в функции main().
 """
 
-import pygame
 from pygame import Surface
 from pygame.time import Clock
 
@@ -33,10 +32,9 @@ __all__ = [
     'UP',
 ]
 
-screen: Surface = pygame.display.set_mode(
-    (SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32,
-)
-clock: Clock = pygame.time.Clock()
+pygame_wrapper = PyGameWrapper()
+screen: Surface = pygame_wrapper.screen
+clock: Clock = pygame_wrapper.clock
 
 
 def handle_keys(game_object):
@@ -57,23 +55,26 @@ def main():
         7. Отрисовывает объекты и обновляет экран.
     """
     # Инициализация PyGame:
-    pygame_wrapper = PyGameWrapper()
-    pygame_wrapper.clock = clock
     pygame_wrapper.launch()
     # Тут нужно создать экземпляры классов.
-    apple = Apple()
     snake = Snake()
+    apple = Apple(restricted_positions=snake.positions)
 
     while True:
         # Тут опишите основную логику игры.
-        pygame_wrapper.clock.tick(SPEED)
+        clock.tick(SPEED)
         pygame_wrapper.handle_keys(snake)
         pygame_wrapper.clear()
 
         snake.update_direction()
         snake.move(field_size=(SCREEN_WIDTH, SCREEN_HEIGHT))
 
-        snake.eat_apple(apple.position, apple_func=apple.randomize_position)
+        if snake.position == apple.position:
+            snake.length = len(snake.positions)
+            apple.randomize_position(restricted_positions=snake.positions)
+        else:
+            snake.positions.pop()
+
         snake.eat_snake(func_clear=pygame_wrapper.clear)
         apple.draw(pygame_wrapper.screen)
         snake.draw(pygame_wrapper.screen)

@@ -6,7 +6,7 @@
 методы для обработки нажатий клавиш и работы с таймингом.
 """
 
-import pygame
+import pygame as pg
 from pygame import Surface
 from pygame.time import Clock
 
@@ -33,21 +33,21 @@ class PyGameWrapper:
         для контроля FPS.
         """
         # Настройка игрового окна:
-        self.screen = pygame.display.set_mode(
+        self.screen = pg.display.set_mode(
             (SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32,
         )
         # Настройка времени:
-        self.clock = pygame.time.Clock()
+        self.clock = pg.time.Clock()
 
         # Заголовок окна игрового поля:
-        pygame.display.set_caption('Змейка')
+        pg.display.set_caption('Змейка')
 
     def launch(self):
         """Инициализирует подсистемы Pygame.
 
-        Вызывает pygame.init() для подготовки всех модулей.
+        Вызывает pg.init() для подготовки всех модулей.
         """
-        pygame.init()
+        pg.init()
 
     def handle_keys(self, game_object):
         """Обрабатывает события клавиатуры для смены направления змейки.
@@ -58,24 +58,24 @@ class PyGameWrapper:
         Args:
             game_object: Объект Snake, направление которого нужно изменить.
         """
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
                 raise SystemExit
-            elif event.type == pygame.KEYDOWN:
+            elif event.type == pg.KEYDOWN:
                 key = event.key
-                if key == pygame.K_UP and game_object.direction != DOWN:
+                if key == pg.K_UP and game_object.direction != DOWN:
                     game_object.next_direction = UP
-                elif key == pygame.K_DOWN and game_object.direction != UP:
+                elif key == pg.K_DOWN and game_object.direction != UP:
                     game_object.next_direction = DOWN
-                elif key == pygame.K_LEFT and game_object.direction != RIGHT:
+                elif key == pg.K_LEFT and game_object.direction != RIGHT:
                     game_object.next_direction = LEFT
-                elif key == pygame.K_RIGHT and game_object.direction != LEFT:
+                elif key == pg.K_RIGHT and game_object.direction != LEFT:
                     game_object.next_direction = RIGHT
 
     def flip(self):
         """Запрос на отрисовку"""
-        pygame.display.flip()
+        pg.display.flip()
 
     def clear(self):
         """Очищение игрового поля"""
