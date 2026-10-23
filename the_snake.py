@@ -66,7 +66,6 @@ def handle_keys(game_object):
 
 
 def main():
-    exit()
     """Основной игровой цикл.
 
     Инициализирует Pygame, создаёт экземпляры Snake и Apple,
