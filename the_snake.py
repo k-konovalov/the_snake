@@ -6,7 +6,7 @@
 реализован в функции main().
 """
 
-import pygame as pg
+import pygame
 
 from constants import (BOARD_BACKGROUND_COLOR, DOWN, GRID_HEIGHT, GRID_SIZE,
                        GRID_WIDTH, LEFT, RIGHT, SCREEN_HEIGHT, SCREEN_WIDTH,
@@ -31,13 +31,13 @@ __all__ = [
 ]
 
 # Настройка игрового окна:
-screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
 # Заголовок окна игрового поля:
-pg.display.set_caption('Змейка')
+pygame.display.set_caption('Змейка')
 
 # Настройка времени:
-clock = pg.time.Clock()
+clock = pygame.time.Clock()
 
 
 def handle_keys(game_object):
@@ -49,19 +49,19 @@ def handle_keys(game_object):
     Args:
         game_object: Объект Snake, направление которого нужно изменить.
     """
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            pg.quit()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
             raise SystemExit
-        elif event.type == pg.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
             key = event.key
-            if key == pg.K_UP and game_object.direction != DOWN:
+            if key == pygame.K_UP and game_object.direction != DOWN:
                 game_object.next_direction = UP
-            elif key == pg.K_DOWN and game_object.direction != UP:
+            elif key == pygame.K_DOWN and game_object.direction != UP:
                 game_object.next_direction = DOWN
-            elif key == pg.K_LEFT and game_object.direction != RIGHT:
+            elif key == pygame.K_LEFT and game_object.direction != RIGHT:
                 game_object.next_direction = LEFT
-            elif key == pg.K_RIGHT and game_object.direction != LEFT:
+            elif key == pygame.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
 
 
@@ -79,7 +79,7 @@ def main():
         7. Отрисовывает объекты и обновляет экран.
     """
     # Инициализация PyGame:
-    pg.init()
+    pygame.init()
     # Тут нужно создать экземпляры классов.
     snake = Snake()
     apple = Apple()
@@ -103,7 +103,7 @@ def main():
         apple.draw(screen)
         snake.draw(screen)
 
-        pg.display.flip()
+        pygame.display.flip()
 
 
 if __name__ == '__main__':

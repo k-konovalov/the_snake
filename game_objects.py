@@ -8,7 +8,7 @@
 
 from random import choice, randint
 
-import pygame as pg
+import pygame
 from pygame import Surface
 
 from constants import (APPLE_COLOR, BOARD_BACKGROUND_COLOR, BORDER_COLOR,
@@ -37,7 +37,7 @@ class GameObject:
         """
         self.position: tuple[int, int] = position
         self.positions: list[tuple[int, int]] = [position]
-        self.body_color = pg.Color(body_color)
+        self.body_color = pygame.Color(body_color)
 
     def draw(self, screen: Surface):
         """Абстрактный метод отрисовки объекта на экране.
@@ -69,9 +69,9 @@ class GameObject:
         """
         if position is None:
             position = self.position
-        rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
-        pg.draw.rect(screen, self.body_color, rect)
-        pg.draw.rect(screen, BORDER_COLOR, rect, 1)
+        rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(screen, self.body_color, rect)
+        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
 
 class Apple(GameObject):
