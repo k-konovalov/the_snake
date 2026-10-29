@@ -208,11 +208,9 @@ class Snake(GameObject):
 
     def eat_snake(self, func_clear):
         """Поедание самой себя"""
-        for part in self.positions[1:]:
-            if self.position == part:
-                self.reset()
-                func_clear()
-                break
+        if self.position in self.positions[1:]:
+            self.reset()
+            func_clear()
 
     def reset(self):
         """Сбрасывает змейку в начальное состояние.
