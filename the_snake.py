@@ -82,7 +82,7 @@ def main():
     pygame.init()
     # Тут нужно создать экземпляры классов.
     snake = Snake()
-    apple = Apple()
+    apple = Apple(restricted_positions=snake.positions)
 
     while True:
         # Тут опишите основную логику игры.
